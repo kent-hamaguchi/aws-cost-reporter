@@ -7,6 +7,11 @@ import (
 	"github.com/kent-hamaguchi/aws-cost-reporter/internal/cost"
 )
 
+// Notify コスト通知
+type Notify interface {
+	Send() error
+}
+
 // Controller コスト通知コントローラ
 type Controller interface {
 	Send() SendInput
@@ -17,8 +22,7 @@ type Presenter interface {
 	Send(SendOutput) error
 }
 
-// Notify コスト通知
-type Notify struct {
+type notify struct {
 	costRepo   cost.Repository
 	controller Controller
 	presenter  Presenter
@@ -29,8 +33,8 @@ func New(
 	costRepo cost.Repository,
 	controller Controller,
 	presenter Presenter,
-) *Notify {
-	return &Notify{
+) Notify {
+	return &notify{
 		costRepo:   costRepo,
 		controller: controller,
 		presenter:  presenter,
@@ -48,7 +52,7 @@ type SendOutput struct {
 }
 
 // Send コスト通知を実行する
-func (r *Notify) Send() error {
+func (r *notify) Send() error {
 	in := r.controller.Send()
 	c, err := r.costRepo.GetMonthly(in.Now.Year(), in.Now.Month())
 	if err != nil {

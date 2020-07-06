@@ -23,6 +23,10 @@ type Config struct {
 	SlackWebhookURL string
 }
 
+type reporter struct {
+	notify notify.Notify
+}
+
 // New コスト通知のインスタンスを作成します
 func New(cfg Config) Reporter {
 	r := repository.New(cfg.AWSConfig)
@@ -31,10 +35,6 @@ func New(cfg Config) Reporter {
 	return &reporter{
 		notify: notify.New(r, c, p),
 	}
-}
-
-type reporter struct {
-	notify *notify.Notify
 }
 
 // Send コスト通知を送信します
