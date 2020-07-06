@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	prof := flag.String("prof", "", "AWS Prpfile name")
-	webhook := flag.String("webhook", "", "Slack webhook URL")
+	prof := flag.String("prof", "", "AWS Profile name")
+	webhook := flag.String("webhook", "", "Slack incoming webhook URL")
 	flag.Parse()
 	cfg, err := external.LoadDefaultAWSConfig(external.WithSharedConfigProfile(*prof))
 	if err != nil {
